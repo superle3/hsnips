@@ -1,19 +1,19 @@
 {
-    "name": "hsnips",
-    "displayName": "HyperSnips for Math",
+    "name": "HyperSnipsV2",
+    "displayName": "HyperSnips V2",
     "icon": "images/hypersnips.png",
-    "version": "0.4.8",
-    "publisher": "OrangeX4",
+    "version": "1.0.0",
+    "publisher": "Oskar-Idland",
     "license": "MIT",
     "repository": {
         "type": "git",
-        "url": "https://github.com/OrangeX4/hsnips"
+        "url": "https://github.com/Oskar-Idland/hsnips"
     },
     "bugs": {
-        "url": "https://github.com/draivin/hsnips/issues"
+        "url": "https://github.com/Oskar-Idland/hsnips/issues"
     },
     "engines": {
-        "vscode": "^1.52.0"
+        "vscode": "^1.86.0"
     },
     "categories": [
         "Snippets",
@@ -27,7 +27,7 @@
     ],
     "preview": true,
     "activationEvents": [
-        "*"
+        "onStartupFinished"
     ],
     "contributes": {
         "configuration": [
@@ -126,7 +126,7 @@
         "watch": "tsc -watch -p ./"
     },
     "devDependencies": {
-        "@types/node": "^10.17.50",
+        "@types/node": "^10.17.60",
         "@types/vscode": "^1.52.0",
         "eslint": "^7.17.0",
         "typescript": "^3.9.7"

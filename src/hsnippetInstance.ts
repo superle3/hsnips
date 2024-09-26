@@ -79,9 +79,11 @@ export class HSnippetInstance {
         editor.document.uri.toString()
       );
     } catch (e) {
-      vscode.window.showWarningMessage(
-        `Snippet ${this.type.description} failed to expand with error: ${e.message}`
-      );
+    	if (e instanceof Error) {
+        vscode.window.showWarningMessage(
+          `Snippet ${this.type.description} failed to expand with error: ${e.message}`
+        );
+      }
     }
 
     // For a lack of creativity, I'm referring to the parts of the array that are returned by the

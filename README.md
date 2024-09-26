@@ -1,77 +1,77 @@
-[![Version](https://vsmarketplacebadges.dev/version-short/orangex4.hsnips.png)](https://marketplace.visualstudio.com/items?itemName=orangex4.hsnips)
-[![Rating](https://vsmarketplacebadges.dev/rating-short/orangex4.hsnips.png)](https://marketplace.visualstudio.com/items?itemName=orangex4.hsnips)
-[![Installs](https://vsmarketplacebadges.dev/installs/orangex4.hsnips.png)](https://marketplace.visualstudio.com/items?itemName=orangex4.hsnips)
+[![Version](https://vsmarketplacebadges.dev/version-short/Oskar-Idland.HyperSnipsV2.png)](https://marketplace.visualstudio.com/items?itemName=Oskar-Idland.HyperSnipsV2)
+[![Rating](https://vsmarketplacebadges.dev/rating-short/Oskar-Idland.HyperSnipsV2.png)](https://marketplace.visualstudio.com/items?itemName=Oskar-Idland.HyperSnipsV2)
+[![Installs](https://vsmarketplacebadges.dev/installs/Oskar-Idland.HyperSnipsV2.png)](https://marketplace.visualstudio.com/items?itemName=Oskar-Idland.HyperSnipsV2)
 
-# HyperSnips for Math
+Credit to [OrangeX4](https://github.com/OrangeX4/hsnips) for the great fork of the original plugin by [draivin](https://github.com/draivin/hsnips).
+# HyperSnips V2
+![](./images/welcome.gif)
 
-这是一个由 [OrangeX4]() 魔改过的 HyperSnips, 增加了**对 Markdown 和 Latex 中数学环境匹配** 的功能. 并且加入了 `${VISUAL}` 语法的支持.
+GitHub: https://github.com/Oskar-Idland/hsnips
 
-GitHub 地址: https://github.com/OrangeX4/hsnips
+- [HyperSnips V2](#hypersnips-v2)
+  - [Quick Start](#quick-start)
+    - [Syntax and Flags](#syntax-and-flags)
+    - [Regex and Priority](#regex-and-priority)
+    - [Return Value and JavaScript](#return-value-and-javascript)
+    - [Visual Selection](#visual-selection)
+    - [Example Config](#example-config)
+  - [Detailed Usage](#detailed-usage)
+    - [Snippets file](#snippets-file)
+    - [Trigger](#trigger)
+    - [Flags](#flags)
+    - [Snippet body](#snippet-body)
+    - [Code interpolation](#code-interpolation)
+  - [Additional Examples](#additional-examples)
 
-**使用这个插件前, 请把原来的 HyperSnips 插件删除!**
-**使用这个插件前, 请把原来的 HyperSnips 插件删除!**
-**使用这个插件前, 请把原来的 HyperSnips 插件删除!**
+## Quick Start
+Press `Ctrl + Shift + P`, and choose `Open Snippets Directory`, then create a `markdown.hsnips` file, for your markdown snippets. Substitute "markdown" for **whatever language you want**. You can also create a `all.hsnips` file for snippets that should be available in all languages. 
 
-并且 **开启** 在 markdown 下的 **自动补全提示**, 请使用 `Shift + Ctrl + P` 然后输入 `open settings json` 打开配置文件, 然后加入以下部分:
-
-```json
-"[markdown]": {
-    "editor.quickSuggestions": true
-},
-```
-
-**安装完成后**, 按下快捷键 `Ctrl + Shift + P`, 输入命令 `Open Snippets Directory`, 就可以打开一个文件夹. 在 **该文件夹** 新建一个文件 `markdown.hsnips`, 并将 [OrangeX4's hsnips](https://github.com/OrangeX4/OrangeX4-HyperSnips/blob/main/markdown.hsnips) 里面的内容输入进去, 保存, 就可以使用了.
-
-先看个 **普通例子**:
-
+### Syntax and Flags
+Here is an example of a snippet that will expand to `\mathbb{R}` when you type `RR` in a math environment:
 ```hsnips
 snippet RR "R" iAm
 \mathbb{R}
 endsnippet
 ```
+There are three flags in this snippet: `i`, `A`, and `m`. `i` allows the snippet to be triggered in the middle of a word, `A` allows the snippet to be triggered automatically, and `m` specifies that the snippet should only be triggered in a math environment.
 
-这是一个在数学环境中自动展开的 Snippet, 它有三个标示符 `iAm`, 分别代表 "在词语内部也会触发", "自动展开" 和 "数学环境".
+### Regex and Priority
+Here is another example of a snippet that will postfix any word, putting it in the bold font:
+```hsnips
+priority 100
+snippet `(\\?[a-zA-Z]\w*({?\w*})?)(bf|BF)` "mathbf" iAm
+\mathbf{``rv = m[1]``}
+endsnippet
+```
+Priority is set to 100, so that if two snippets match sometimes, this will be prioritized. You can have many different priorities. 
 
-这个例子会在数学环境内, 自动将 `RR` 展开成为 `\mathbb{R}`, 代表 "实数".
+### Return Value and JavaScript
+We can manipulate our snippets further with return values: `rv = m[1]`. In this case, `m[1]` is the first match group of the regex trigger. We can use JavaScript to manipulate this string before it is inserted. Here we use it to uppercase the letter to be put in the math font. 
 
-再看个 **正则表达式** 的例子:
-
-``` hsnips
-snippet `((\d+)|(\d*)(\\)?([A-Za-z]+)((\^|_)(\{\d+\}|\d))*)/` "Fraction no ()" Am
-\frac{``rv = m[1]``}{$1}$0
+```hsnips
+priority 100
+snippet `(\\?[a-zA-Z]\w*({?\w*})?)cal` "mathcal" iAm
+\mathcal{``rv = m[1].toUpperCase()``}$0
 endsnippet
 ```
 
-其中 `rv = m[1]` 是 JavaScript 代码, 表示将正则表达式的第一个组 `m[1]` 输出给 "返回值" `rv`, 然后输出出去.
-
-这是一个在数学环境中自动展开的 Snippet, 它有两个标示符 'Am', 分别代表 '自动展开' 和 '数学环境'. 用处是:
-
-```
-1/    --->    \frac{1}{}
-```
-
-相比于原来的 HyperSnips, 最大特点是, 它只会在数学环境 `$...$`, `$$...$$`, `\(...\)` 和 `\[...\]` 中自动展开!
-
-**还有 `${VISUAL}` 语法:**
-
-```
+### Visual Selection
+With the VISUAL keyword, we can insert what was selected, before typing the trigger. Here is an example of a snippet that will expand to a fraction with the selected text as the numerator:
+```hsnips
 snippet fr "frac" iAm
 \\frac{${1:${VISUAL}}}{$2}
 endsnippet
 ```
 
-这个语法会保存最近选中的内容 (5 秒内), 然后替换掉 `${VISUAL}` 部分.
-
-以下是原来的 `README.md`:
+### Example Config
+My own snippet file, `latex.hsnips`, is made for math/physics and can be found [here](https://github.com/Oskar-Idland/vscode/blob/main/latex.hsnips). 
 
 ---
-
-![](./images/welcome.gif)
+## Detailed Usage 
 
 HyperSnips is a snippet engine for vscode heavily inspired by vim's
 [UltiSnips](https://github.com/SirVer/ultisnips).
 
-## Usage
 
 To use HyperSnips you create `.hsnips` files on a directory which depends on your platform:
 
@@ -167,7 +167,7 @@ blocks in the snippet.
 
 The `require` function can also be used to import NodeJS modules.
 
-## Examples
+## Additional Examples
 
 - Simple snippet which greets you with the current date and time
 

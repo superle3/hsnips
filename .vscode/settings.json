@@ -5,5 +5,13 @@
 	"spellright.documentTypes": [
 		"markdown",
 		"latex"
+	],
+	"cSpell.words": [
+		"APPDATA",
+		"endsnippet",
+		"hsnips",
+		"hypersnips",
+		"mathbb",
+		"ultisnips"
 	]
 }

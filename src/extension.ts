@@ -77,10 +77,11 @@ export async function expandSnippet(
         { undoStopAfter: false, undoStopBefore: !snippetExpansion }
     );
 
-    await editor.insertSnippet(snippetInstance.snippetString, insertionRange, {
-        undoStopAfter: false,
-        undoStopBefore: false,
-    });
+	await vscode.commands.executeCommand("editor.action.insertSnippet", {
+	    snippet: snippetInstance.snippetString.value,
+	    location: insertionRange,
+	    options: { undoStopAfter: false, undoStopBefore: false },
+	  });
 
     if (snippetInstance.selectedPlaceholder != 0) SNIPPET_STACK.unshift(snippetInstance);
     insertingSnippet = false;
