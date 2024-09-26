@@ -11,6 +11,7 @@ GitHub: https://github.com/Oskar-Idland/hsnips
 - [HyperSnips V2](#hypersnips-v2)
   - [Quick Start](#quick-start)
     - [Syntax and Flags](#syntax-and-flags)
+    - [Tabstops and Placeholders](#tabstops-and-placeholders)
     - [Regex and Priority](#regex-and-priority)
     - [Return Value and JavaScript](#return-value-and-javascript)
     - [Visual Selection](#visual-selection)
@@ -28,16 +29,33 @@ Press `Ctrl + Shift + P`, and choose `Open Snippets Directory`, then create a `m
 
 ### Syntax and Flags
 Here is an example of a snippet that will expand to `\mathbb{R}` when you type `RR` in a math environment:
-```hsnips
+```lua
 snippet RR "R" iAm
 \mathbb{R}
 endsnippet
 ```
 There are three flags in this snippet: `i`, `A`, and `m`. `i` allows the snippet to be triggered in the middle of a word, `A` allows the snippet to be triggered automatically, and `m` specifies that the snippet should only be triggered in a math environment.
 
+### Tabstops and Placeholders 
+Tabstops are used to define where the cursor should go after the snippet is expanded. Pressing `Tab` will move the cursor to the next tabstop. Here is an example of a snippet that will expand to a table environment with a caption and a label:
+```lua
+snippet tabular "tabular" wA
+\begin{table}[${1:h!}]
+  \centering
+  $0
+  \caption{$2}
+  \label{tab: $3}
+\end{table}
+endsnippet
+```
+The cursor begins at the first tabstop, `${1:h!}`. Here `h!` is the default value, but will be overwritten by typing. By pressing `Tab`, the cursor will move to the next tabstop, `${2}`. The cursor will then move to `${3}`. The final tabstop is `$0`, which is inside the table environment.
+
+Nested tabstops are supported, meaning you can use snippets inside snippets!
+                                      
+
 ### Regex and Priority
 Here is another example of a snippet that will postfix any word, putting it in the bold font:
-```hsnips
+```lua
 priority 100
 snippet `(\\?[a-zA-Z]\w*({?\w*})?)(bf|BF)` "mathbf" iAm
 \mathbf{``rv = m[1]``}
@@ -48,7 +66,7 @@ Priority is set to 100, so that if two snippets match sometimes, this will be pr
 ### Return Value and JavaScript
 We can manipulate our snippets further with return values: `rv = m[1]`. In this case, `m[1]` is the first match group of the regex trigger. We can use JavaScript to manipulate this string before it is inserted. Here we use it to uppercase the letter to be put in the math font. 
 
-```hsnips
+```lua
 priority 100
 snippet `(\\?[a-zA-Z]\w*({?\w*})?)cal` "mathcal" iAm
 \mathcal{``rv = m[1].toUpperCase()``}$0
@@ -57,7 +75,7 @@ endsnippet
 
 ### Visual Selection
 With the VISUAL keyword, we can insert what was selected, before typing the trigger. Here is an example of a snippet that will expand to a fraction with the selected text as the numerator:
-```hsnips
+```lua
 snippet fr "frac" iAm
 \\frac{${1:${VISUAL}}}{$2}
 endsnippet
@@ -91,7 +109,7 @@ global blocks and snippet blocks.
 Global blocks are JavaScript code blocks with code that is shared between all the snippets defined
 in the current file. They are defined with the `global` keyword, as follows:
 
-```hsnips
+```js
 global
 // JavaScript code
 endglobal
@@ -99,7 +117,7 @@ endglobal
 
 Snippet blocks are snippet definitions. They are defined with the `snippet` keyword, as follows:
 
-```hsnips
+```lua
 snippet trigger "description" flags
 body
 endsnippet
@@ -171,7 +189,7 @@ The `require` function can also be used to import NodeJS modules.
 
 - Simple snippet which greets you with the current date and time
 
-```hsnips
+```lua
 snippet dategreeting "Gives you the current date!"
 Hello from your hsnip at ``rv = new Date().toDateString()``!
 endsnippet
@@ -179,7 +197,7 @@ endsnippet
 
 - Box snippet as shown in the gif above
 
-```hsnips
+```lua
 snippet box "Box" A
 ``rv = '┌' + '─'.repeat(t[0].length + 2) + '┐'``
 │ $1 │
@@ -189,7 +207,7 @@ endsnippet
 
 - Snippet to insert the current filename
 
-```hsnips
+```lua
 snippet filename "Current Filename"
 ``rv = require('path').basename(path)``
 endsnippet
