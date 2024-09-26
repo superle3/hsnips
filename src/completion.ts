@@ -142,7 +142,7 @@ export function getCompletions(
     let completion = new CompletionInfo(snippet, label, snippetRange, matchGroups);
     if (snippet.automatic && snippetMatches) {
       return completion;
-    } else if (prefixMatches) {
+    } else if (prefixMatches && !snippet.hidden) {
       completions.push(completion);
     }
   }

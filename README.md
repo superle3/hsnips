@@ -156,6 +156,9 @@ flags are the following:
 
 - `m`: Math mode
 
+- `h`: Hidden snippet - *Requires `A` flag*. By default, all non-regex snippets will be listed by 
+  the inline suggestions. This `h` flag hides the snippet from the inline suggestions.
+
 \*: This flag will only affect snippets which have non-regex triggers.
 
 ### Snippet body
