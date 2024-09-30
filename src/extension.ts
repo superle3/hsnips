@@ -7,6 +7,7 @@ import { HSnippetInstance } from './hsnippetInstance';
 import { parse } from './parser';
 import { getSnippetDir } from './utils';
 import { getCompletions, CompletionInfo } from './completion';
+import { COMPLETIONS_TRIGGERS } from './consts';
 
 const SNIPPETS_BY_LANGUAGE: Map<string, HSnippet[]> = new Map();
 const SNIPPET_STACK: HSnippetInstance[] = [];
@@ -249,6 +250,8 @@ export function activate(context: vscode.ExtensionContext) {
                     }).map((c) => c.toCompletionItem());
                 }
             },
-        })
+        },
+        ...COMPLETIONS_TRIGGERS
+        )
     );
 }
