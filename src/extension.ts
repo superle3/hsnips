@@ -19,7 +19,7 @@ async function loadSnippets() {
 
     let snippetDir = getSnippetDir();
     if (!existsSync(snippetDir)) {
-        mkdirSync(snippetDir);
+        mkdirSync(snippetDir, { recursive: true });
     }
 
     for (let file of readdirSync(snippetDir)) {
