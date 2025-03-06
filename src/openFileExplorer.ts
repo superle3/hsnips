@@ -12,13 +12,13 @@ export function openExplorer(path: string, callback: Function=(err: Error)=>{
 }) {
     let platform: string = os.platform();
 
-    let defaultPath = {
+    let defaultPath: { [key: string]: string } = {
         'win32': '.',
         'darwin': '.',
         'linux': '.'
     }
 
-    let commands = {
+    let commands: { [key: string]: string } = {
         'win32': 'explorer',
         'darwin': 'open',
         'linux': 'xdg-open'
