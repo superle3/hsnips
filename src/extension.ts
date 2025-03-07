@@ -1,7 +1,6 @@
 import * as vscode from 'vscode';
 import { existsSync, mkdirSync, readdirSync, readFileSync } from 'fs';
 import * as path from 'path';
-import { openExplorer } from './openFileExplorer';
 import { HSnippet } from './hsnippet';
 import { HSnippetInstance } from './hsnippetInstance';
 import { parse } from './parser';
@@ -92,7 +91,24 @@ export function activate(context: vscode.ExtensionContext) {
     loadSnippets();
 
     context.subscriptions.push(
-        vscode.commands.registerCommand('hsnips.openSnippetsDir', () => openExplorer(getSnippetDir()))
+        vscode.commands.registerCommand('hsnips.openSnippetsDir', () => {
+            const snippetDir = getSnippetDir();
+            if (!existsSync(snippetDir)) {
+                vscode.window.showErrorMessage(`The snippet directory does not exist: ${snippetDir}`);
+                return;
+            }
+            const files = readdirSync(snippetDir);
+            if (files.length == 0) {
+                const uri = vscode.Uri.file(path.join(snippetDir, 'temp.hsnips'));
+                vscode.workspace.fs.writeFile(uri, new Uint8Array(0)).then(() => {
+                    vscode.commands.executeCommand('revealFileInOS', uri)
+                    vscode.workspace.fs.delete(uri, { useTrash: false });
+                })
+            } else{
+                const uri = vscode.Uri.file(path.join(snippetDir, files[0]));
+                vscode.commands.executeCommand('revealFileInOS', uri)
+            }
+        })
     );
 
     context.subscriptions.push(
