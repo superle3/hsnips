@@ -95,11 +95,13 @@ To use HyperSnips you create `.hsnips` files on a directory which depends on you
 
 - Windows: `%APPDATA%\Code\User\hsnips\(language).hsnips`
 - Mac: `$HOME/Library/Application Support/Code/User/hsnips/(language).hsnips`
-- Linux: `$HOME/.config/Code/User/hsnips/(language).hsnips`
+- Linux/ WSL: `$HOME/.config/Code/User/hsnips/(language).hsnips`
 
 Or alternatively, you can open this directory by running the command `HyperSnips: Open snippets directory`.
 
 Additionally, you can create an `all.hsnips` file for snippets that should be available on all languages.
+> [!NOTE]
+> The path in WSL is from the Linux instance not Windows.
 
 ### Snippets file
 

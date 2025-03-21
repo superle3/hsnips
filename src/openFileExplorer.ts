@@ -12,25 +12,20 @@ export function openExplorer(path: string, callback: Function=(err: Error)=>{
 }) {
     let platform: string = os.platform();
 
-    let defaultPath: { [key: string]: string } = {
-        'win32': '.',
-        'darwin': '.',
-        'linux': '.'
-    }
-
     let commands: { [key: string]: string } = {
-        'win32': 'explorer',
+        // use start instead of explorer, since explorer isn't always in the PATH
+        'win32': 'start',
         'darwin': 'open',
         'linux': 'xdg-open'
     }
-    
     if (!(platform == 'win32' || platform == 'darwin' || platform == 'linux')) {
         callback(new Error('Platform not supported'));
         return;
-    }
-
-    path = path || defaultPath[platform];
-    let p = spawn(commands[platform], [path]);
+    };
+    path = path || '.';
+    // set shell to true such that start works in windows 
+    // and cwd to path instead of passing it on to avoid issues with spaces in path
+    let p = spawn(commands[platform], ["."], { shell: true, cwd: path });
     p.on('error', (err) => {
         p.kill();
         callback(new Error(`Error: the term ${commands[platform]} is not recognized as the name of a cmdlet, function, script file, or executable program.

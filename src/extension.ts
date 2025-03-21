@@ -92,7 +92,27 @@ export function activate(context: vscode.ExtensionContext) {
     loadSnippets();
 
     context.subscriptions.push(
-        vscode.commands.registerCommand('hsnips.openSnippetsDir', () => openExplorer(getSnippetDir()))
+        vscode.commands.registerCommand('hsnips.openSnippetsDir', () => {
+            // revealFileInOS opens the directory containing the file/dir, so to open the directory itself
+            // we use one of the snippet files to open the snippet directory and otherwise use on of the fallbacks.
+            const snippetDir = getSnippetDir();
+            if (!existsSync(snippetDir)) {
+                vscode.window.showErrorMessage(`The snippet directory does not exist: ${snippetDir}`);
+                return;
+            }
+            const files = readdirSync(snippetDir);
+            if (files.length == 0){
+                vscode.window.showWarningMessage(`The snippet directory is empty: ${snippetDir}, using fallback instead.`);
+                openExplorer(snippetDir, (err: Error) => {
+                    vscode.window.showWarningMessage("Failed to open the snippet directory, opening outside instead");
+                    const uri = vscode.Uri.file(snippetDir);
+                    vscode.commands.executeCommand('revealFileInOS', uri)
+                });
+            } else{
+                const uri = vscode.Uri.file(path.join(snippetDir, files[0]));
+                vscode.commands.executeCommand('revealFileInOS', uri)
+            }
+        })
     );
 
     context.subscriptions.push(
